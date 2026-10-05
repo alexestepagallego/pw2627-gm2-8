@@ -1,5 +1,5 @@
 # GM2  
-Alejandro Estepa Gallego
-Dario Acosta Sanchez
-Juan García Sanchez
-Fran López Trapero
+Alejandro Estepa Gallego<br>
+Dario Acosta Sanchez<br>
+Juan García Sanchez<br>
+Fran López Trapero<br>
