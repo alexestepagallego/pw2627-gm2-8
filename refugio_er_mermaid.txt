@@ -1,4 +1,9 @@
+---
+config:
+  layout: elk
+---
 erDiagram
+    direction TB
     trabajador {
         int id PK
         varchar nombre
@@ -7,31 +12,12 @@ erDiagram
         date fecha_nacimiento
         varchar direccion
         date fecha_alta
-    }
-    administrativo {
-        int id_trabajador PK, FK
-    }
-    monitor {
-        int id_trabajador PK, FK
-    }
-    veterinario {
-        int id_trabajador PK, FK
-        varchar num_colegiado UK
+        enum categoria "ADMINISTRATIVO / MONITOR / VETERINARIO"
+        varchar num_colegiado UK "solo veterinarios"
     }
     disponibilidad_monitor {
         int id_monitor PK, FK
-        enum dia_semana PK "lunes a viernes"
-    }
-    animal {
-        char codigo_registro PK "15 caracteres"
-        enum especie
-        varchar raza "NULL"
-        varchar nombre
-        int edad
-        enum estado_salud "sano / requiere_atencion_veterinaria"
-        date fecha_llegada
-        date fecha_fallecimiento "NULL"
-        int id_recinto FK "NULL"
+        enum dia_semana PK "LUNES a VIERNES"
     }
     recinto {
         int id PK
@@ -39,17 +25,28 @@ erDiagram
         varchar ubicacion
         int capacidad_maxima
         enum tipo_animal
-        int capacidad_actual "derivado, no se almacena"
+    }
+    animal {
+        char codigo_registro PK "15 caracteres"
+        enum especie
+        varchar raza "NULL"
+        varchar nombre
+        int edad
+        enum estado_salud "SANO / REQUIERE_ATENCION"
+        date fecha_llegada
+        date fecha_fallecimiento "NULL"
+        int id_recinto FK "NULL"
     }
     historial_clinico {
-        char codigo_animal PK, FK
+        int id PK
+        char codigo_animal FK, UK
         int id_veterinario FK
     }
     ingreso {
         int id PK
-        char codigo_animal FK
+        int id_historial FK
         date fecha_entrada
-        date fecha_salida "NULL"
+        date fecha_salida "NULL = ingreso abierto"
         varchar medicacion "NULL"
     }
     adoptante {
@@ -70,7 +67,7 @@ erDiagram
         boolean activa
     }
     centro_educativo {
-        char codigo_centro PK "8 caracteres"
+        char codigo_centro PK "8 alfanumericos"
         varchar nombre
         varchar direccion
         varchar nombre_profesor
@@ -82,27 +79,24 @@ erDiagram
         char codigo_centro FK
         date fecha_solicitud
         int num_estudiantes
-        enum nivel_educativo "infantil / primaria / secundaria"
-        enum estado "pendiente / asignada / finalizada"
+        enum nivel_educativo "INFANTIL / PRIMARIA / SECUNDARIA"
+        enum estado "PENDIENTE / ASIGNADA / FINALIZADA"
         int id_monitor FK "NULL"
         enum dia_asignado "NULL"
     }
     solicitud_dia_preferido {
         int id_solicitud PK, FK
-        enum dia_semana PK "lunes a viernes"
+        enum dia_semana PK "LUNES a VIERNES"
     }
 
-    trabajador ||--o| administrativo : es
-    trabajador ||--o| monitor : es
-    trabajador ||--o| veterinario : es
-    monitor ||--o{ disponibilidad_monitor : disponible
+    trabajador ||--o{ disponibilidad_monitor : "monitor disponible"
+    trabajador ||..o{ historial_clinico : "veterinario atiende"
+    trabajador ||..o{ adopcion : "administrativo tramita"
+    trabajador |o..o{ solicitud_visita : "monitor asignado"
     recinto |o..o{ animal : aloja
-    animal ||--o| historial_clinico : tiene
-    veterinario ||..o{ historial_clinico : atiende
+    animal ||..o| historial_clinico : tiene
     historial_clinico ||..o{ ingreso : registra
     animal ||..o| adopcion : "adoptado en"
     adoptante ||..o{ adopcion : realiza
-    administrativo ||..o{ adopcion : tramita
     centro_educativo ||..o{ solicitud_visita : solicita
-    monitor |o..o{ solicitud_visita : "asignado a"
     solicitud_visita ||--|{ solicitud_dia_preferido : prefiere
