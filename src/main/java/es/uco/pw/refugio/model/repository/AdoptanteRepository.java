@@ -55,8 +55,8 @@ public class AdoptanteRepository {
                             rs.getString("nombre"),
                             rs.getString("apellidos"),
                             rs.getString("dni"),
-                            rs.getString("direccion"),
                             Date.valueOf(rs.getString("fecha_nacimiento")).toLocalDate(),
+                            rs.getString("direccion"),
                             rs.getString("telefono")
                         );
                     }
@@ -166,8 +166,8 @@ public class AdoptanteRepository {
                     row.getString("nombre"),
                     row.getString("apellidos"),
                     row.getString("dni"),
-                    row.getString("direccion"),
                     Date.valueOf(row.getString("fecha_nacimiento")).toLocalDate(),
+                    row.getString("direccion"),
                     row.getString("telefono")
                 );
             }

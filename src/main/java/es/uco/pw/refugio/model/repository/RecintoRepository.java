@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import es.uco.pw.refugio.model.domain.Recinto;
-import es.uco.pw.refugio.model.domain.enums.TipoAnimal;
+import es.uco.pw.refugio.model.domain.enums.Especie;
 
 @Repository
 public class RecintoRepository {
@@ -55,7 +55,7 @@ public class RecintoRepository {
                             rs.getString("nombre"),
                             rs.getString("ubicacion"),
                             rs.getInt("capacidad_maxima"),
-                            TipoAnimal.valueOf(rs.getString("tipo_animal"))
+                            Especie.valueOf(rs.getString("tipo_animal"))
                         );
                     }
                 });
@@ -146,7 +146,7 @@ public class RecintoRepository {
                     row.getString("nombre"),
                     row.getString("ubicacion"),
                     row.getInt("capacidad_maxima"),
-                    TipoAnimal.valueOf(row.getString("tipo_animal"))
+                    Especie.valueOf(row.getString("tipo_animal"))
                 );
             }
             return null;

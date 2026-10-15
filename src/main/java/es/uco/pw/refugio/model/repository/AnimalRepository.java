@@ -17,8 +17,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import es.uco.pw.refugio.model.domain.Animal;
+import es.uco.pw.refugio.model.domain.enums.Especie;
 import es.uco.pw.refugio.model.domain.enums.EstadoSalud;
-import es.uco.pw.refugio.model.domain.enums.TipoAnimal;
 
 @Repository
 public class AnimalRepository {
@@ -58,13 +58,14 @@ public class AnimalRepository {
 
                         return new Animal(
                             rs.getString("codigo_registro"),
-                            TipoAnimal.valueOf(rs.getString("especie")),
+                            Especie.valueOf(rs.getString("especie")),
                             rs.getString("raza"),
                             rs.getString("nombre"),
                             rs.getInt("edad"),
                             EstadoSalud.valueOf(rs.getString("estado_salud")),
                             Date.valueOf(rs.getString("fecha_llegada")).toLocalDate(),
-                            fechaFallecimiento
+                            fechaFallecimiento,
+                            null // idRecinto se pasa como null (sin considerar relaciones)
                         );
                     }
                 });
@@ -91,7 +92,7 @@ public class AnimalRepository {
         }
     }
 
-    public List<Animal> findAnimalesByEspecie(TipoAnimal especie) {
+    public List<Animal> findAnimalesByEspecie(Especie especie) {
         try {
             String query = sqlQueries.getProperty("select-findAnimalesByEspecie");
             if (query != null) {
@@ -108,7 +109,8 @@ public class AnimalRepository {
                             rs.getInt("edad"),
                             EstadoSalud.valueOf(rs.getString("estado_salud")),
                             Date.valueOf(rs.getString("fecha_llegada")).toLocalDate(),
-                            fechaFallecimiento
+                            fechaFallecimiento,
+                            null
                         );
                     }
                 }, especie.toString());
@@ -192,13 +194,14 @@ public class AnimalRepository {
 
                 return new Animal(
                     row.getString("codigo_registro"),
-                    TipoAnimal.valueOf(row.getString("especie")),
+                    Especie.valueOf(row.getString("especie")),
                     row.getString("raza"),
                     row.getString("nombre"),
                     row.getInt("edad"),
                     EstadoSalud.valueOf(row.getString("estado_salud")),
                     Date.valueOf(row.getString("fecha_llegada")).toLocalDate(),
-                    fechaFallecimiento
+                    fechaFallecimiento,
+                    null
                 );
             }
             return null;
